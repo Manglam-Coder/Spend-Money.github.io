@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spend Bill Gates' Money</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #4caf50;
+    }
+
+    .items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .item {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin: 10px;
+      padding: 20px;
+      width: 200px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    button:disabled {
+      background-color: #999;
+    }
+  </style>
+</head>
+<body>
+  <h1>Spend Bill Gates' Money</h1>
+  <h2>Remaining: $<span id="money">100,000,000,000</span></h2>
+  <div class="items" id="items-container"></div>
+
+  <script>
+    let money = 100000000000; // $100 billion
+    const moneyDisplay = document.getElementById("money");
+
+    const items = [
+      { name: "Big Mac", price: 2 },
+      { name: "iPhone", price: 999 },
+      { name: "Tesla", price: 75000 },
+      { name: "Ferrari", price: 250000 },
+      { name: "Yacht", price: 7500000 },
+      { name: "Skyscraper", price: 850000000 },
+      { name: "NBA Team", price: 2120000000 },
+    ];
+
+    function formatMoney(value) {
+      return value.toLocaleString();
+    }
+
+    function updateMoneyDisplay() {
+      moneyDisplay.textContent = formatMoney(money);
+    }
+
+    function createItems() {
+      const container = document.getElementById("items-container");
+
+      items.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "item";
+        itemDiv.innerHTML = `
+          <h3>${item.name}</h3>
+          <p>$${formatMoney(item.price)}</p>
+          <button>Buy</button>
+        `;
+
+        const button = itemDiv.querySelector("button");
+        button.addEventListener("click", () => {
+          if (money >= item.price) {
+            money -= item.price;
+            updateMoneyDisplay();
+          } else {
+            alert("Not enough money!");
+          }
+        });
+
+        container.appendChild(itemDiv);
+      });
+    }
+
+    updateMoneyDisplay();
+    createItems();
+  </script>
+</body>
+</html>
