@@ -6,19 +6,25 @@
   <title>Spend Bill Gates' Money</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #d9a7c7, #fffcdc);
       text-align: center;
-      background-color: #f4f4f4;
       padding: 20px;
     }
 
     h1 {
-      margin-bottom: 10px;
+      font-size: 2.5em;
     }
 
     h2 {
-      margin-top: 0;
       color: #4caf50;
+      margin-top: 0;
+    }
+
+    #total-items {
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #333;
     }
 
     .items {
@@ -29,76 +35,120 @@
 
     .item {
       background: white;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       margin: 10px;
-      padding: 20px;
-      width: 200px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      width: 220px;
+      transition: transform 0.2s;
+    }
+
+    .item:hover {
+      transform: scale(1.03);
+    }
+
+    .item h3 {
+      margin-bottom: 5px;
     }
 
     button {
-      margin-top: 10px;
-      padding: 10px;
       background-color: #4caf50;
-      border: none;
       color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
       cursor: pointer;
-      border-radius: 5px;
       width: 100%;
     }
 
     button:disabled {
-      background-color: #999;
+      background-color: #aaa;
+    }
+
+    .quantity {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <h1>Spend Bill Gates' Money</h1>
+  <h1>🤑 Spend Bill Gates' Money</h1>
   <h2>Remaining: $<span id="money">100,000,000,000</span></h2>
+  <div id="total-items">Total Items Bought: 0</div>
   <div class="items" id="items-container"></div>
 
   <script>
-    let money = 100000000000; // $100 billion
+    let money = 100000000000;
+    let totalItems = 0;
+
     const moneyDisplay = document.getElementById("money");
+    const totalItemsDisplay = document.getElementById("total-items");
 
     const items = [
-      { name: "Big Mac", price: 2 },
-      { name: "iPhone", price: 999 },
-      { name: "Tesla", price: 75000 },
-      { name: "Ferrari", price: 250000 },
-      { name: "Yacht", price: 7500000 },
-      { name: "Skyscraper", price: 850000000 },
-      { name: "NBA Team", price: 2120000000 },
+      { name: "🍔 Big Mac", price: 2 },
+      { name: "📱 iPhone", price: 999 },
+      { name: "🚗 Tesla", price: 75000 },
+      { name: "🏎️ Ferrari", price: 250000 },
+      { name: "🛥️ Yacht", price: 7500000 },
+      { name: "✈️ Jet", price: 50000000 },
+      { name: "🏙️ Skyscraper", price: 850000000 },
+      { name: "🏀 NBA Team", price: 2120000000 },
+      { name: "🌴 Island", price: 5000000 },
+      { name: "🚀 SpaceX Flight", price: 55000000 },
+      { name: "🐶 Puppy", price: 1500 },
+      { name: "🧸 Giant Teddy", price: 100 },
+      { name: "🎮 PlayStation 5", price: 499 },
+      { name: "🪐 Moon Rock", price: 1000000 },
+      { name: "🐉 Pet Dragon (imaginary)", price: 5000 },
+      { name: "🏰 LEGO Castle Set", price: 350 },
+      { name: "🖼️ Custom Painting", price: 2000 },
+      { name: "🎡 Private Theme Park", price: 100000000 },
+      { name: "🧁 Cupcake", price: 3 },
+      { name: "👟 Light-up Shoes", price: 60 }
     ];
 
+    const itemQuantities = {};
+
     function formatMoney(value) {
-      return value.toLocaleString();
+      return value.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      });
     }
 
-    function updateMoneyDisplay() {
-      moneyDisplay.textContent = formatMoney(money);
+    function updateDisplays() {
+      moneyDisplay.textContent = money.toLocaleString();
+      totalItemsDisplay.textContent = `Total Items Bought: ${totalItems}`;
     }
 
     function createItems() {
       const container = document.getElementById("items-container");
 
       items.forEach(item => {
+        itemQuantities[item.name] = 0;
+
         const itemDiv = document.createElement("div");
         itemDiv.className = "item";
         itemDiv.innerHTML = `
           <h3>${item.name}</h3>
-          <p>$${formatMoney(item.price)}</p>
+          <p>${formatMoney(item.price)}</p>
           <button>Buy</button>
+          <div class="quantity" id="qty-${item.name}">Bought: 0</div>
         `;
 
         const button = itemDiv.querySelector("button");
         button.addEventListener("click", () => {
           if (money >= item.price) {
             money -= item.price;
-            updateMoneyDisplay();
+            itemQuantities[item.name]++;
+            totalItems++;
+            updateDisplays();
+            document.getElementById(`qty-${item.name}`).textContent = `Bought: ${itemQuantities[item.name]}`;
           } else {
-            alert("Not enough money!");
+            alert("Oops! Not enough money! 💸");
           }
         });
 
@@ -106,7 +156,7 @@
       });
     }
 
-    updateMoneyDisplay();
+    updateDisplays();
     createItems();
   </script>
 </body>
